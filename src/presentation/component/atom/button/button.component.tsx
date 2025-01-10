@@ -9,45 +9,14 @@ import {
   TextStyle,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { cva, VariantProps } from 'class-variance-authority';
+import { Theme } from '../../../theme/theme';
+import { IconPosition, Intent, Shape, Size } from '../../../../domain/enum/button';
 
-const buttonStyles = cva(
-  'flex-row justify-center items-center',
-  {
-    variants: {
-      intent: {
-        primary: 'bg-blue-500 text-white',
-        secondary: 'bg-gray-500 text-white',
-        danger: 'bg-red-500 text-white',
-        outline: 'border border-blue-500 text-blue-500 bg-transparent',
-      },
-      size: {
-        small: 'h-8 px-4 text-sm',
-        medium: 'h-10 px-6 text-base',
-        large: 'h-12 px-8 text-lg',
-      },
-      shape: {
-        rectangle: 'rounded-lg',
-        circle: 'rounded-full h-12 w-12 justify-center',
-      },
-      fullWidth: {
-        true: 'w-full',
-        false: '',
-      },
-    },
-    defaultVariants: {
-      intent: 'primary',
-      size: 'medium',
-      shape: 'rectangle',
-      fullWidth: false,
-    },
-  }
-);
 
-interface ButtonProps extends VariantProps<typeof buttonStyles> {
+interface ButtonProps {
   text?: string;
-  intent:any;
-  size: any;
+  intent?: Intent
+  size?: Size;
   onPress: () => void;
   style?: ViewStyle;
   textStyle?: TextStyle;
@@ -56,18 +25,18 @@ interface ButtonProps extends VariantProps<typeof buttonStyles> {
   gradientColors?: string[];
   gradientStyle?: ViewStyle;
   icon?: React.ReactNode;
-  iconPosition?: 'left' | 'right';
+  iconPosition?: IconPosition;
   children?: React.ReactNode;
   disabled?: boolean;
   fullWidth?: boolean;
-  shape?: 'rectangle' | 'circle';
+  shape?: Shape;
   accessibilityLabel?: string;
 }
 
 const Button: React.FC<ButtonProps> = ({
   text,
-  intent,
-  size,
+  intent = Intent.Primary,
+  size = Size.Medium,
   onPress,
   style,
   textStyle,
@@ -76,19 +45,27 @@ const Button: React.FC<ButtonProps> = ({
   gradientColors = ['#4caf50', '#81c784'],
   gradientStyle,
   icon,
-  iconPosition = 'left',
+  iconPosition = IconPosition.Left,
   children,
   disabled = false,
   fullWidth = false,
-  shape = 'rectangle',
+  shape = Shape.Rectangle,
   accessibilityLabel,
 }) => {
-  const buttonClass = buttonStyles({ intent, size, fullWidth, shape });
+  const buttonStyle = [
+    styles.base,
+    fullWidth && styles.fullWidth,
+    shape === Shape.Circle ? styles.circle : styles.rectangle,
+    styles[intent],
+    styles[size],
+    disabled && styles.disabledButton,
+    style,
+  ];
 
   const renderContent = () => (
-    <View style={[styles.content, iconPosition === 'right' && styles.rowReverse]}>
-      {icon && <View style={[styles.icon, iconPosition === 'right' && styles.iconRight]}>{icon}</View>}
-      {text && <Text style={[styles.text, StyleSheet.flatten(buttonClass), textStyle]}>{text}</Text>}
+    <View style={[styles.content, iconPosition === IconPosition.Right && styles.rowReverse]}>
+      {icon && <View style={[styles.icon, iconPosition === IconPosition.Right && styles.iconRight]}>{icon}</View>}
+      {text && <Text style={[styles.text, textStyle]}>{text}</Text>}
       {children}
     </View>
   );
@@ -97,16 +74,18 @@ const Button: React.FC<ButtonProps> = ({
     return (
       <LinearGradient
         colors={gradientColors}
-        style={[styles.base, StyleSheet.flatten(buttonClass), gradientStyle]}
+        style={[styles.gradientContainer, buttonStyle, gradientStyle]}
       >
         <TouchableOpacity
-          style={[styles.gradientButton, style]}
+          style={styles.gradientTouchable}
           onPress={onPress}
           activeOpacity={0.8}
           disabled={isLoading || disabled}
+          accessible
           accessibilityLabel={accessibilityLabel}
+          accessibilityRole="button"
         >
-          {isLoading ? <ActivityIndicator color="white" /> : renderContent()}
+          {isLoading ? <ActivityIndicator color={Theme.colors.white} /> : renderContent()}
         </TouchableOpacity>
       </LinearGradient>
     );
@@ -114,18 +93,15 @@ const Button: React.FC<ButtonProps> = ({
 
   return (
     <TouchableOpacity
-      style={[
-        styles.base,
-        StyleSheet.flatten(buttonClass),
-        style,
-        disabled && styles.disabledButton,
-      ]}
+      style={buttonStyle}
       onPress={onPress}
       activeOpacity={0.8}
       disabled={isLoading || disabled}
+      accessible
       accessibilityLabel={accessibilityLabel}
+      accessibilityRole="button"
     >
-      {isLoading ? <ActivityIndicator color={intent === 'outline' ? 'blue' : 'white'} /> : renderContent()}
+      {isLoading ? <ActivityIndicator color={intent === Intent.Outline ? Theme.colors.Primary : Theme.colors.white} /> : renderContent()}
     </TouchableOpacity>
   );
 };
@@ -134,6 +110,46 @@ const styles = StyleSheet.create({
   base: {
     justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: 8,
+  },
+  fullWidth: {
+    width: '100%',
+  },
+  rectangle: {
+    borderRadius: 8,
+  },
+  circle: {
+    borderRadius: 50,
+    height: 48,
+    width: 48,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  primary: {
+    backgroundColor: Theme.colors.Primary,
+  },
+  secondary: {
+    backgroundColor: '#6B7280',
+  },
+  danger: {
+    backgroundColor: Theme.colors.Error,
+  },
+  outline: {
+    borderWidth: 1,
+    borderColor: Theme.colors.Primary,
+    backgroundColor: 'transparent',
+  },
+  small: {
+    height: 32,
+    paddingHorizontal: 12,
+  },
+  medium: {
+    height: 40,
+    paddingHorizontal: 16,
+  },
+  large: {
+    height: 48,
+    paddingHorizontal: 20,
   },
   content: {
     flexDirection: 'row',
@@ -144,6 +160,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontWeight: 'bold',
+    color: 'white',
     textAlign: 'center',
   },
   icon: {
@@ -156,7 +173,11 @@ const styles = StyleSheet.create({
   disabledButton: {
     opacity: 0.6,
   },
-  gradientButton: {
+  gradientContainer: {
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  gradientTouchable: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',

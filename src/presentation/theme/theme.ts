@@ -1,6 +1,6 @@
 // theme.ts
 import { Dimensions, PixelRatio } from 'react-native';
-import { BorderRadius, Colors, FontSizes, FontWeights, Spacing } from '../../../domain/enum/theme';
+import { BorderRadius, Colors, FontSizes, FontWeights, Spacing } from '../../domain/enum/theme';
 
 // Utility for responsive font sizes
 const { width: SCREEN_WIDTH } = Dimensions.get('window');

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FlatList, ImageBackground, StyleSheet, Text, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
-export default function CoverScroll() {
+export default function FoodSwiperScreen() {
   const [viewHeight, setHeight] = useState(null);
 
   return (
