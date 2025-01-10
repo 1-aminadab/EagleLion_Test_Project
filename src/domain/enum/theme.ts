@@ -1,17 +1,23 @@
 
 // Enums for theme constants
 export enum Colors {
-  Primary = '#e63946',
-  PrimaryLight = '#BB86FC',
-  PrimaryDark = '#3700B3',
-  Accent = '#03DAC6',
-  white = '#FFFFFF',
-  Surface = '#F5F5F5',
-  Error = '#B00020',
-  black = '#000000',
-  TextSecondary = '#616161',
-  TextDisabled = '#9E9E9E',
-  Border = '#E0E0E0',
+  Primary = '#e63946', // Main primary color
+  PrimaryLight = '#FF7F7F', // Light shade of primary color
+  PrimaryDark = '#D00000', // Dark shade of primary color
+  Accent = '#03DAC6', // Accent color
+  white = '#FFFFFF', // White color
+  Surface = '#F5F5F5', // Background surface color
+  Error = '#B00020', // Error color
+  black = '#000000', // Black color
+  brown = '#654321', // Main brown color
+  BrownLight = '#D2B48C', // Light brown shade
+  BrownDark = '#3E2A47', // Dark brown shade
+  gray = '#808080', // Main gray color
+  GrayLight = '#D3D3D3', // Light gray shade
+  GrayDark = '#4B4B4B', // Dark gray shade
+  TextSecondary = '#616161', // Secondary text color
+  TextDisabled = '#9E9E9E', // Disabled text color
+  Border = '#E0E0E0', // Border color
 }
 
 export enum FontSizes {

@@ -42,7 +42,7 @@ const Button: React.FC<ButtonProps> = ({
   textStyle,
   isLoading = false,
   gradient = false,
-  gradientColors = ['#4caf50', '#81c784'],
+  gradientColors = ['rgb(109, 2, 248)', 'rgb(207,73,236)'],
   gradientStyle,
   icon,
   iconPosition = IconPosition.Left,
