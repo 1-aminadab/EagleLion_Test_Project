@@ -12,10 +12,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import { Theme } from '../../../theme/theme';
 import { IconPosition, Intent, Shape, Size } from '../../../../domain/enum/button';
 
-
 interface ButtonProps {
   text?: string;
-  intent?: Intent
+  intent?: Intent;
   size?: Size;
   onPress: () => void;
   style?: ViewStyle;
@@ -24,6 +23,8 @@ interface ButtonProps {
   gradient?: boolean;
   gradientColors?: string[];
   gradientStyle?: ViewStyle;
+  gradientStart?: { x: number; y: number }; // Gradient start position
+  gradientEnd?: { x: number; y: number };   // Gradient end position
   icon?: React.ReactNode;
   iconPosition?: IconPosition;
   children?: React.ReactNode;
@@ -44,6 +45,8 @@ const Button: React.FC<ButtonProps> = ({
   gradient = false,
   gradientColors = ['rgb(109, 2, 248)', 'rgb(207,73,236)'],
   gradientStyle,
+  gradientStart = { x: 0, y: 0 }, // Default gradient start (top-left)
+  gradientEnd = { x: 1, y: 1 },   // Default gradient end (bottom-right)
   icon,
   iconPosition = IconPosition.Left,
   children,
@@ -74,6 +77,8 @@ const Button: React.FC<ButtonProps> = ({
     return (
       <LinearGradient
         colors={gradientColors}
+        start={gradientStart}
+        end={gradientEnd}
         style={[styles.gradientContainer, buttonStyle, gradientStyle]}
       >
         <TouchableOpacity
@@ -119,9 +124,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   circle: {
-    borderRadius: 50,
-    height: 48,
-    width: 48,
+    borderRadius: 500,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -139,13 +142,16 @@ const styles = StyleSheet.create({
     borderColor: Theme.colors.Primary,
     backgroundColor: 'transparent',
   },
+  text: {
+    borderColor: Theme.colors.Primary,
+    backgroundColor: 'transparent',
+  },
   small: {
     height: 32,
     paddingHorizontal: 12,
   },
   medium: {
     height: 40,
-    paddingHorizontal: 16,
   },
   large: {
     height: 48,
@@ -163,9 +169,7 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
   },
-  icon: {
-    marginHorizontal: 4,
-  },
+  icon: {},
   iconRight: {
     marginLeft: 8,
     marginRight: 0,
