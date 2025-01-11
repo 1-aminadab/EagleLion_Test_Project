@@ -2,54 +2,63 @@ import { Image, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { Theme } from '../../../theme/theme';
 
-const foodCardComponent = () => {
+interface IProp {
+  image: string;
+  text?: string;
+  tag?: {title:string, color:string};
+}
+
+const FoodCardComponent: React.FC<IProp> = ({ image, text, tag }) => {
   return (
-    <View style={{
-      width: 120,
-      height: 140,
-      // backgroundColor: 'red',
-      borderRadius: 20,
-      marginBottom: 20,
-      alignItems:"center",
-      padding:10
-    }}>
-      <View style={{
-             backgroundColor: '#90EE90',
-             padding: 5,
-             borderRadius: 30,
-             position: 'absolute',
-             top: 0,
-             left: 70,
-             zIndex: 1,
-             width: 60,
-             alignItems: 'center',
-             justifyContent: 'center',
-      }}>
-      <Text style={{
-          fontSize: 12,
-          fontWeight: 'bold',
-          color: 'white',
-     
-        }}>
-          24/7
-        </Text>
-      </View>
-      <Image source={{uri:"https://cdn.pixabay.com/photo/2022/08/29/17/45/burger-7419428_640.jpg"}}
-      style={{
-        flex:1,
-        width: '100%',
-        // height: '100%',
-        resizeMode: 'cover',
-        borderRadius: 20,
-      }}
-      />
-      <Text style={{fontWeight:"bold" ,fontSize:15, color: Theme.colors.GrayDark}}>
-        Restaurants
-      </Text>
+    <View style={styles.cardContainer}>
+      {tag && (
+        <View style={[styles.tagContainer, {backgroundColor:tag.color}]}>
+          <Text style={styles.tagText}>{tag.title}</Text>
+        </View>
+      )}
+      <Image source={{ uri: image }} style={styles.image} />
+      {text && <Text style={styles.text}>{text}</Text>}
     </View>
   );
 };
 
-export default foodCardComponent;
+const styles = StyleSheet.create({
+  cardContainer: {
+    width: 90,
+    height: 140,
+    borderRadius: 20,
+    marginBottom: 20,
+    alignItems: 'center',
+    padding: 10,
+  },
+  tagContainer: {
+    backgroundColor: '#90EE90',
+    padding: 5,
+    borderRadius: 30,
+    position: 'absolute',
+    top: 0,
+    left: 48,
+    zIndex: 1,
+    width: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  tagText: {
+    fontSize: 9,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  image: {
+    flex: 1,
+    width: 81,
+    resizeMode: 'cover',
+    borderRadius: 20,
+  },
+  text: {
+    fontWeight: 'bold',
+    fontSize: 12,
+    color: Theme.colors.GrayDark,
+  },
+});
 
-const styles = StyleSheet.create({});
+export default FoodCardComponent;

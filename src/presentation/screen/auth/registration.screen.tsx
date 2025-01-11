@@ -1,95 +1,106 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React, { useState } from 'react';
+import { View, StyleSheet } from 'react-native';
+import { TextInput } from 'react-native-paper';
+import Typography from '../../component/atom/typography/text.component';
 import Button from '../../component/atom/button/button.component';
-import { Intent, Size } from '../../../domain/enum/button';
-import Swiper from '../../component/molecule/card/nav-card.component';
-import { FoodCardComponent } from '../../component/molecule/card';
-import SwipeableModal from '../../component/molecule/modal/swipeable-modal';
-import SwipableModal from '../../component/molecule/modal/swipeable-modal';
-import Input from '../../component/atom/input/input.component';
-import SearchInput from '../../component/molecule/input/search-input';
+import { FontSizes, FontWeights } from '../../../domain/enum/theme';
+import Header from '../../component/molecule/card/header.component';
 
-const RegistrationScreen = () => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
-
+const RegisterScreen = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [inputFocus, setInputFocus] = useState(false);
   return (
-    <View style={{flex:1, gap:10 }}>
-       <Button
-        text="Continue"
-        intent={Intent.Primary}
-        size={Size.Large}
-        onPress={() => {}}
-        isLoading={false}
-        gradient
-        style={{marginHorizontal:10}}
+    <View style={styles.container}>
+     <Header title="Register"/>
+      <View style={{marginTop: 100, flex: 1}}>
+      <TextInput
+      onFocus={() => setInputFocus(true)}
+      onBlur={() => setInputFocus(false)}
+        label="Name"
+        mode="flat"
+        value={name}
+        onChangeText={setName}
+        style={styles.input}
+        placeholder="Enter your name"
+        outlineColor="transparent"
+        activeOutlineColor="transparent"
+        theme={{ colors: {  primary: 'black' } }}
       />
-<Swiper />
-<FoodCardComponent/>
-<Input/>
-<SearchInput/>
-<TouchableOpacity
+  
+      <TextInput
+      onFocus={() => setInputFocus(true)}
+      onBlur={() => setInputFocus(false)}
+        label="E-mail"
+        mode="flat"
+        value={email}
+        onChangeText={setEmail}
+        style={styles.input}
+        keyboardType="email-address"
+        placeholder="Enter your email"
+        theme={{ colors: {  primary: 'black' } }}
+
+      />
+
+      <Typography size={12} align="center" style={[styles.infoText, {display: inputFocus ? 'flex' : 'none'}]}>
+        Communications and transaction history from the app will be sent to the verified email address.
+      </Typography>
+
+     
+      <View style={styles.promoContainer}>
+        <Typography size={14} align="center" style={styles.promoText}>
+          FREE delivery just for you! 🔥 Use code <Typography weight={FontWeights.Bold}>WELCOME</Typography> and redeem it now!
+        </Typography>
+      </View>
+      </View>
+      <Button
+        text="Register"
+        onPress={() => {
+          console.log('Registering:', { name, email });
+        }}
+        fullWidth
+        disabled ={!name && !email}
         style={styles.button}
-        onPress={() => setIsModalVisible(true)}
-      >
-        <Text style={styles.buttonText}>Open Modal</Text>
-      </TouchableOpacity>
-<SwipableModal
-        visible={isModalVisible}
-        onClose={() => setIsModalVisible(false)}
-      >
-        <Text style={styles.modalTitle}>Hello from the Modal!</Text>
-        <Text style={styles.modalText}>
-          You can add any content you want here.
-        </Text>
-        <TouchableOpacity
-          style={styles.modalButton}
-          onPress={() => setIsModalVisible(false)}
-        >
-          <Text style={styles.modalButtonText}>Close Modal</Text>
-        </TouchableOpacity>
-      </SwipableModal>
-</View>
+      />
+
+    </View>
   );
 };
-
-export default RegistrationScreen;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
+    paddingHorizontal: 24,
+    backgroundColor: '#fff',
+  },
+  title: {
+    marginBottom: 16,
+  },
+  input: {
+    marginBottom: 16,
+    backgroundColor: '#fff',
+  },
+  infoText: {
+    marginBottom: 32,
+    color: '#888',
   },
   button: {
-    padding: 15,
-    backgroundColor: '#007bff',
-    borderRadius: 5,
-    width:100
+    marginTop: 16,
+    marginBottom: 16,
+    borderRadius: 50
   },
-  buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
+  promoContainer: {
+    marginTop: 32,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    backgroundColor: '#f9f9f9',
   },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  modalText: {
-    fontSize: 16,
-    marginBottom: 20,
-  },
-  modalButton: {
-    padding: 15,
-    backgroundColor: '#ff4444',
-    borderRadius: 5,
-  },
-  modalButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    textAlign: 'center',
+  promoText: {
+    color: '#444',
   },
 });
 
+export default RegisterScreen;

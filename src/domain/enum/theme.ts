@@ -5,6 +5,7 @@ export enum Colors {
   PrimaryLight = '#FF7F7F', // Light shade of primary color
   PrimaryDark = '#D00000', // Dark shade of primary color
   Accent = '#03DAC6', // Accent color
+  LightGreen = '#00c73c',
   white = '#FFFFFF', // White color
   Surface = '#F5F5F5', // Background surface color
   Error = '#B00020', // Error color
@@ -13,7 +14,7 @@ export enum Colors {
   BrownLight = '#D2B48C', // Light brown shade
   BrownDark = '#3E2A47', // Dark brown shade
   gray = '#808080', // Main gray color
-  GrayLight = '#D3D3D3', // Light gray shade
+  GrayLight = '#DbDbDb', // Light gray shade
   GrayDark = '#4B4B4B', // Dark gray shade
   TextSecondary = '#616161', // Secondary text color
   TextDisabled = '#9E9E9E', // Disabled text color
@@ -21,10 +22,11 @@ export enum Colors {
 }
 
 export enum FontSizes {
+  ExtraSmall = 10,
   Small = 12,
   Regular = 14,
   Medium = 16,
-  Large = 20,
+  Large = 18,
   ExtraLarge = 24,
   Jumbo = 32,
 }

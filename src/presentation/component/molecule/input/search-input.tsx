@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, ViewStyle, TextStyle } from 'react-native';
 import Input from '../../atom/input/input.component';
-import Icon, { IconLibraryName } from '../../atom/icon/icon.coponent';
+import Icon, { IconLibraryName } from '../../atom/icon/icon.component';
 import { Theme } from '../../../theme/theme';
 
 interface SearchInputProps {
@@ -38,11 +38,10 @@ const styles = StyleSheet.create({
   container: {
     borderColor: '#ccc',
     borderRadius: 25,
-    backgroundColor: Theme.colors.white + '66',
+    backgroundColor: Theme.colors.GrayLight+'66',
     margin:10,
     overflow:"hidden",
-    padding: 3
-
+    padding: 3,
   },
 });
 

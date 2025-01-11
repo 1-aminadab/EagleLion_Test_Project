@@ -50,7 +50,6 @@ const PhoneNumberInput = () => {
         }
         iconPosition="left"
       />
-
       {/* Button */}
       <Button
         text="Continue"

@@ -8,7 +8,7 @@ import {
   Dimensions,
 } from 'react-native';
 
-const { height: SCREEN_HEIGHT } = Dimensions.get('window');
+const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('window');
 interface SwipableModalProps {
   visible: boolean;
   onClose?: () => void;
@@ -84,7 +84,7 @@ const SwipableModal:React.FC<SwipableModalProps> = ({ visible, onClose, children
 const styles = StyleSheet.create({
   modal: {
     position: 'absolute',
-    width: '100%',
+    width: SCREEN_WIDTH,
     bottom: 0,
     backgroundColor: '#fff',
     borderTopLeftRadius: 20,

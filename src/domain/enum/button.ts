@@ -3,6 +3,8 @@ export enum Intent {
   Secondary = 'secondary',
   Danger = 'danger',
   Outline = 'outline',
+  Text = 'text',
+
 }
 
 export enum Size {

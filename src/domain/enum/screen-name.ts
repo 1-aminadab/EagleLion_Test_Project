@@ -10,9 +10,18 @@ export enum HomeScreens {
     FoodDetail = 'FoodDetail',
     FoodSwiper = 'FoodSwiper',
     Profile = 'Profile',
+    Delivery = 'Delivery',
+    ConfirmDelivery = 'Confirm-Delivery'
 }
 
 export enum OnboardingScreens {
     Onboarding = 'Onboarding',
     Location = 'Location',
+}
+
+export enum RootScreens {
+    Onboarding = 'RootOnboarding',
+    Auth = 'Auth',
+    Home = 'RootHome'
+   
 }

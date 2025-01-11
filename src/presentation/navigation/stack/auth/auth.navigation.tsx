@@ -6,7 +6,7 @@ import { AuthScreens } from '../../../../domain/enum/screen-name';
 const AuthStack = createNativeStackNavigator();
 export const AuthNavigator = () => (
   <AuthStack.Navigator screenOptions={{ headerShown: false }}>
-    <AuthStack.Screen name={AuthScreens.Register} component={RegistrationScreen} />
+      <AuthStack.Screen name={AuthScreens.Register} component={RegistrationScreen} />
     <AuthStack.Screen name={AuthScreens.OTP} component={OtpVerificationScreen} />
     <AuthStack.Screen name={AuthScreens.Phone} component={PhoneScreen} />
   </AuthStack.Navigator>
