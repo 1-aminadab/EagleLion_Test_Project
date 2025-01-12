@@ -8,9 +8,15 @@ import { FontSizes, FontWeights, Colors } from '../../../domain/enum/theme';
 import { Intent, Size } from '../../../domain/enum/button';
 import { Theme } from '../../theme/theme';
 import SearchInput from '../../component/molecule/input/search-input';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../application/stores/store';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { HomeScreens } from '../../../domain/enum/screen-name';
 const { width } = Dimensions.get('window');
 
 const PaymentSuccessScreen = () => {
+  const { cart, totalPrice, totalCartItems } = useSelector((state: RootState) => state.food);
+  const navigation = useNavigation<NavigationProp<any>>();
   return (
     <View style={{padding:10,gap: 15, flex: 1}}>
         
@@ -52,7 +58,7 @@ All Mamora, Doha, Al Mahayn Municpa
           weight={FontWeights.Bold}
           style={styles.amountText}
         >
-          137 QR
+          {totalPrice} QR
         </Typography>
 
         {/* Success Message */}
@@ -69,7 +75,7 @@ All Mamora, Doha, Al Mahayn Municpa
         <Button
           intent={Intent.Secondary}
           text="Go To Order Tracking"
-          onPress={() => console.log('Navigating to tracking...')}
+          onPress={() => navigation.navigate(HomeScreens.Delivery)}
           style={{backgroundColor:Theme.colors.GrayLight, borderRadius: 50, width:"100%"}}
           size={Size.Large}
           textStyle={{color:Theme.colors.black, fontWeight:FontWeights.Bold}}

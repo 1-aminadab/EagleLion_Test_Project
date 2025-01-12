@@ -4,19 +4,14 @@ import { configureStore } from '@reduxjs/toolkit';
 import { combineReducers } from 'redux';
 import { persistStore, persistReducer, PersistConfig } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import foodReducer from './slices/food/food.slice'
 // Import your slices here
-import authReducer from './slices/authSlice';
-import rentReducer from './slices/rentSlice';
-import transactionReducer from './slices/transaction/transactionSlice';
 
 // Define the shape of the root state
 export type RootState = ReturnType<typeof rootReducer>;
 
 const rootReducer = combineReducers({
-  auth: authReducer,
-  rent: rentReducer,
-  transactions: transactionReducer
+  food: foodReducer
 });
 
 // Configure Persist

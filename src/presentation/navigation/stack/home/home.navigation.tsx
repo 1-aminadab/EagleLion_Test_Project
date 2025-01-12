@@ -6,12 +6,12 @@ import { CartScreen, ConfirmDeliveryScreen, DeliveryScreen, FoodDetailScreen, Fo
 const HomeStack = createNativeStackNavigator();
 export const HomeNavigator = () => (
   <HomeStack.Navigator screenOptions={{ headerShown: false }}>
+    <HomeStack.Screen name={HomeScreens.Home} component={HomeScreen} />
+    <HomeStack.Screen name={HomeScreens.FoodSwiper} component={FoodSwiperScreen} />
     <HomeStack.Screen name={HomeScreens.FoodDetail} component={FoodDetailScreen} />
     <HomeStack.Screen name={HomeScreens.Delivery} component={DeliveryScreen} />
     <HomeStack.Screen name={HomeScreens.ConfirmDelivery} component={ConfirmDeliveryScreen} />
     <HomeStack.Screen name={HomeScreens.Cart} component={CartScreen} />
-    <HomeStack.Screen name={HomeScreens.Home} component={HomeScreen} />
-    <HomeStack.Screen name={HomeScreens.FoodSwiper} component={FoodSwiperScreen} />
     <HomeStack.Screen name={HomeScreens.Profile} component={ProfileScreen} />
   </HomeStack.Navigator>
 );

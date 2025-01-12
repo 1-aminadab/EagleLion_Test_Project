@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import { Theme } from '../../../theme/theme';
 
@@ -6,11 +6,12 @@ interface IProp {
   image: string;
   text?: string;
   tag?: {title:string, color:string};
+  onPress: () => void;
 }
 
-const FoodCardComponent: React.FC<IProp> = ({ image, text, tag }) => {
+const FoodCardComponent: React.FC<IProp> = ({ image, text, tag, onPress }) => {
   return (
-    <View style={styles.cardContainer}>
+    <TouchableOpacity onPress={onPress} style={styles.cardContainer}>
       {tag && (
         <View style={[styles.tagContainer, {backgroundColor:tag.color}]}>
           <Text style={styles.tagText}>{tag.title}</Text>
@@ -18,7 +19,7 @@ const FoodCardComponent: React.FC<IProp> = ({ image, text, tag }) => {
       )}
       <Image source={{ uri: image }} style={styles.image} />
       {text && <Text style={styles.text}>{text}</Text>}
-    </View>
+    </TouchableOpacity>
   );
 };
 

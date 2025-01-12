@@ -1,16 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TextInput, Alert } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  View,
+  StyleSheet,
+  TextInput,
+  Alert,
+  TouchableOpacity,
+  Keyboard,
+  Animated,
+} from 'react-native';
 import Typography from '../../component/atom/typography/text.component';
-import Button from '../../component/atom/button/button.component';
-import { FontSizes, FontWeights } from '../../../domain/enum/theme';
+import { Colors, FontSizes, FontWeights } from '../../../domain/enum/theme';
 import Header from '../../component/molecule/card/header.component';
+import { useNavigation } from '@react-navigation/native';
+import { AuthScreens } from '../../../domain/enum/screen-name';
 
 const OtpVerificationScreen = () => {
   const [otp, setOtp] = useState('');
-  const [timer, setTimer] = useState(29); // Countdown timer
-  const [resendVisible, setResendVisible] = useState(false); // Resend button visibility
+  const [timer, setTimer] = useState(29);
+  const [resendVisible, setResendVisible] = useState(false);
+  const inputRef = useRef<TextInput>(null);
+  const shakeAnimation = useRef(new Animated.Value(0)).current;
 
-  // Countdown logic
+  const navigation = useNavigation();
+
   useEffect(() => {
     let interval;
     if (timer > 0) {
@@ -21,71 +33,91 @@ const OtpVerificationScreen = () => {
     return () => clearInterval(interval);
   }, [timer]);
 
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
   const handleResend = () => {
     Alert.alert('Verification Code', 'We have sent a verification code to your phone number.');
-    setTimer(29); // Restart timer
+    setTimer(29);
     setResendVisible(false);
   };
 
+  const handleOtpChange = (text: string) => {
+    const numericValue = text.replace(/[^0-9]/g, '');
+    setOtp(numericValue);
+
+    if (numericValue.length === 6) {
+      if (numericValue === '123456') {
+        navigation.navigate(AuthScreens.Register as never);
+      } else {
+        triggerShakeAnimation();
+        setOtp('');
+      }
+    }
+  };
+
+  const triggerShakeAnimation = () => {
+    Animated.sequence([
+      Animated.timing(shakeAnimation, { toValue: 10, duration: 50, useNativeDriver: true }),
+      Animated.timing(shakeAnimation, { toValue: -10, duration: 50, useNativeDriver: true }),
+      Animated.timing(shakeAnimation, { toValue: 10, duration: 50, useNativeDriver: true }),
+      Animated.timing(shakeAnimation, { toValue: 0, duration: 50, useNativeDriver: true }),
+    ]).start();
+  };
+
   const formatOtp = (value: string): string => {
-    const paddedValue = value.padEnd(6, '•');
-    const formatted = `${paddedValue.slice(0, 3)}-${paddedValue.slice(3)}`;
+    const paddedValue = value.padEnd(6, '\u22C5');
+    const spacedValue = paddedValue.split('').join(' ');
+    const formatted = `${spacedValue.slice(0, 5)} ${spacedValue.slice(5)}`;
     return formatted;
   };
 
   return (
     <View style={styles.container}>
-      <Header title="hello" />
-      <View style={{ flex: 1, marginTop: 90 }}>
+      <Header />
+      <View style={{ flex: 1, marginTop: 80 }}>
         <Typography size={FontSizes.ExtraLarge} weight={FontWeights.Bold} align="center" style={styles.title}>
           Enter Code
         </Typography>
-        <Typography size={14} align="center" style={styles.subtitle}>
+        <Typography size={14} align="center"  weight={FontWeights.Bold} color={Colors.black}>
           We've sent the 6-digit code to
         </Typography>
-        <Typography size={14} align="center" style={styles.subtitle}>
+        <Typography size={14} align="center"  weight={FontWeights.Bold} color={Colors.black}>
           +974 •••• ••••
         </Typography>
+
+        {/* Hidden TextInput */}
         <TextInput
-          style={styles.input}
+          ref={inputRef}
+          style={styles.hiddenInput}
           keyboardType="numeric"
           maxLength={6}
           value={otp}
-          onChangeText={(text) => {
-            // Allow only numeric input
-            const numericValue = text.replace(/[^0-9]/g, '');
-            setOtp(numericValue);
-          }}
-          placeholder={formatOtp('')}
-          placeholderTextColor="#ccc"
-          textAlign="center"
+          onChangeText={handleOtpChange}
+          autoFocus
         />
 
-        <Typography size={24} align="center" style={styles.formattedOtp}>
-          {formatOtp(otp)}
-        </Typography>
+        {/* Clickable Formatted OTP */}
+        <TouchableOpacity style={{marginTop:50}} onPress={() => inputRef.current?.focus()}>
+          <Animated.View style={{ transform: [{ translateX: shakeAnimation }] }}>
+            <Typography size={24} align="center" style={styles.formattedOtp}>
+              {formatOtp(otp)}
+            </Typography>
+          </Animated.View>
+        </TouchableOpacity>
 
         {resendVisible ? (
-          <Button
-            text="Resend Code"
-            onPress={handleResend}
-            fullWidth
-            style={styles.resendButton}
-          />
+          <TouchableOpacity onPress={handleResend}>
+            <Typography size={16} align="center" style={styles.resendText}>
+              Resend Code
+            </Typography>
+          </TouchableOpacity>
         ) : (
           <Typography size={12} align="center" style={styles.timer}>
             Request a new code in 0:{timer.toString().padStart(2, '0')}
           </Typography>
         )}
-
-        <Button
-          text="Verify"
-          onPress={() => {
-            console.log('OTP Verified:', otp);
-          }}
-          fullWidth
-          style={styles.button}
-        />
       </View>
     </View>
   );
@@ -104,32 +136,28 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     color: '#888',
   },
-  input: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    borderBottomWidth: 2,
-    borderBottomColor: '#ccc',
-    marginBottom: 24,
-    opacity: 0, // Hide the input text but keep it interactive
+  hiddenInput: {
+    opacity: 0,
     position: 'absolute',
-    width: '100%',
-    height: 50,
+    width: 1,
+    height: 1,
+    marginTop:100
   },
   formattedOtp: {
     fontSize: 24,
     fontWeight: 'bold',
     letterSpacing: 5,
     marginBottom: 24,
+    color: '#000',
   },
   timer: {
     marginBottom: 24,
     color: '#888',
   },
-  resendButton: {
+  resendText: {
+    color: '#4caf50',
+    fontWeight: 'bold',
     marginBottom: 24,
-  },
-  button: {
-    marginTop: 16,
   },
 });
 

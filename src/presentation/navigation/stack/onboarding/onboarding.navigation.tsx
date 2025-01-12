@@ -6,7 +6,7 @@ import { OnboardingScreens } from '../../../../domain/enum/screen-name';
 const OnboardingStack = createNativeStackNavigator();
 export const OnboardingNavigator = () => (
   <OnboardingStack.Navigator screenOptions={{ headerShown: false }}>
-    <OnboardingStack.Screen name={OnboardingScreens.Location} component={LocationScreen} />
     <OnboardingStack.Screen name={OnboardingScreens.Onboarding} component={OnboardingScreen} />
+    <OnboardingStack.Screen name={OnboardingScreens.Location} component={LocationScreen} />
   </OnboardingStack.Navigator>
 );
