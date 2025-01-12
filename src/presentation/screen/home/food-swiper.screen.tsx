@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState } from 'react';
-import { FlatList, Image, ImageBackground, Modal, StyleSheet, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { FlatList, Image, ImageBackground, StyleSheet, TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Button from '../../component/atom/button/button.component';
 import Typography from '../../component/atom/typography/text.component';
@@ -8,34 +8,64 @@ import { Shape } from '../../../domain/enum/button';
 import { Theme } from '../../theme/theme';
 import Icon, { IconLibraryName } from '../../component/atom/icon/icon.component';
 import { Colors, FontSizes, FontWeights } from '../../../domain/enum/theme';
+import { dummyFoods } from '../../../application/data/dummy-data';
+import { useDispatch, useSelector } from 'react-redux';
+import { addFoodToCart, selectFood, setFoodItems } from '../../../application/stores/slices/food/food.slice';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { HomeScreens } from '../../../domain/enum/screen-name';
+import IconButton from '../../component/atom/button/icon-button.component';
+import { RootState } from '../../../application/stores/store';
 
 export default function FoodSwiperScreen() {
-  const [viewHeight, setHeight] = useState<number | null>(null);
+  const { cart } = useSelector((state: RootState) => state.food);
+  console.log(cart);
 
+  const [viewHeight, setHeight] = useState<number | null>(null);
+  const dispatch = useDispatch();
+  const navigation = useNavigation<NavigationProp<any>>();
+  const handleSelectFood = (id: string) => {
+    dispatch(selectFood({ id }));
+    navigation.navigate(HomeScreens.FoodDetail);
+  };
+  useEffect(() => {
+    dispatch(setFoodItems(dummyFoods));
+  }, [])
   return (
     <View style={styles.container} onLayout={(e) => setHeight(e.nativeEvent.layout.height)}>
+      {/* Header */}
+      <View style={styles.header}>
+        <Button
+          icon={<Icon from={IconLibraryName.Ionicons} name="arrow-back" size={20} color="white" />}
+          style={styles.iconButton}
+          onPress={() => { }}
+          shape={Shape.Circle}
+        />
+        <Typography size={FontSizes.Medium} weight={FontWeights.Bold} color={Theme.colors.white} style={styles.headerText}>
+          Top Picks for Lunch
+        </Typography>
+      </View>
       {viewHeight && (
         <FlatList
-          data={data}
+          data={dummyFoods}
           pagingEnabled
           keyExtractor={(item, index) => index.toString()}
           decelerationRate="fast"
           renderItem={({ item }) => (
-            <View style={[styles.item, { height: viewHeight }]}>
-              <ImageBackground style={styles.img} source={{ uri: item }} resizeMode="cover">
+            <TouchableOpacity onLongPress={() => handleSelectFood(item.id)} style={[styles.item, { height: viewHeight }]}>
+              <ImageBackground style={styles.img} source={{ uri: item.imageUrl }} resizeMode="cover">
                 {/* Gradient Overlay */}
-                <View style={{alignItems:'center', position:'absolute', top:'50%', left:'85%'}}>
-                      <Button
+                <View style={{ alignItems: 'center', position: 'absolute', top: '50%', left: '85%' }}>
+                  <Button
                     icon={<Icon from={IconLibraryName.Feather} name="share" size={24} color={Theme.colors.white} />}
                     style={styles.shareButton}
                     shape={Shape.Circle}
 
-                    onPress={() => {}}
+                    onPress={() => { }}
                   />
                   <Typography weight={FontWeights.Bold} size={FontSizes.Small} color={Theme.colors.white}>
                     Share
                   </Typography>
-                  </View>
+                </View>
                 <LinearGradient
                   start={{ x: 0, y: 0.5 }}
                   end={{ x: 0, y: 1 }}
@@ -43,29 +73,15 @@ export default function FoodSwiperScreen() {
                   style={styles.gradient}
                 />
 
-                {/* Header */}
-                <View style={styles.header}>
-                  <Button
-                    icon={<Icon from={IconLibraryName.Ionicons} name="arrow-back" size={20} color="white" />}
-                    style={styles.iconButton}
-                    onPress={() => {}}
-                    shape={Shape.Circle}
-                  />
-                  <Typography size={FontSizes.Medium} weight={FontWeights.Bold} color={Theme.colors.white} style={styles.headerText}>
-                    Top Picks for Lunch
-                  </Typography>
 
-
-                </View>
 
                 {/* Bottom Card */}
                 <View style={styles.card}>
                   {/* Restaurant Info */}
-
                   <View style={styles.restaurantInfo}>
                     <Image
                       source={{
-                        uri: 'https://media.istockphoto.com/id/1829241109/photo/enjoying-a-brunch-together.jpg?b=1&s=612x612&w=0&k=20&c=Mn_EPBAGwtzh5K6VyfDmd7Q5eJFXSHhGWVr3T4WDQRo=',
+                        uri: item.imageUrl,
                       }}
                       style={styles.profileImage}
                     />
@@ -74,51 +90,47 @@ export default function FoodSwiperScreen() {
                         {'Shanghai Me >'}
                       </Typography>
                       <Typography size={FontSizes.ExtraSmall}
-                      weight={FontWeights.Bold}
-                      color={Theme.colors.white} >
-                        53 mins
+                        weight={FontWeights.Bold}
+                        color={Theme.colors.white} >
+                        {item.deliveryTime}
                       </Typography>
                     </View>
                   </View>
-                  <View  style={{backgroundColor: Theme.colors.GrayDark + 'ee', flexDirection:'row', alignItems:'center', padding:10, borderRadius:15}}>
-                    <View style={{flex: 1}}>
-                       <Typography numberOfLines={1} size={FontSizes.Medium} weight={FontWeights.Bold} color={Theme.colors.white} >
-                    Mixed Steamed Dim Sum Basket
-                  </Typography>
-                  <Typography size={FontSizes.Small} weight={FontWeights.Bold} color={Colors.white} >
-                    140 QR
-                  </Typography>
-                  <Typography numberOfLines={2} size={FontSizes.Small}   color={Theme.colors.GrayLight} >
-                    Two Pieces Prawn And Truffle Dumplings, Two Pieces Chicken And ...
-                  </Typography>
+                  <TouchableOpacity onPress={() => navigation.navigate(HomeScreens.Cart)} style={{ backgroundColor: Theme.colors.GrayDark + 'ee', flexDirection: 'row', alignItems: 'center', padding: 10, borderRadius: 15 }}>
+                    <View style={{ flex: 1 }}>
+                      <Typography numberOfLines={1} size={FontSizes.Medium} weight={FontWeights.Bold} color={Theme.colors.white} >
+                        {item.name}
+                      </Typography>
+                      <Typography size={FontSizes.Small} weight={FontWeights.Bold} color={Colors.white} >
+                        {item.quantity} QR
+                      </Typography>
+                      <Typography numberOfLines={2} size={FontSizes.Small} color={Theme.colors.GrayLight} >
+                        {item.description}
+                      </Typography>
 
                     </View>
                     <View>
-                    <Image
-                      source={{
-                        uri: 'https://media.istockphoto.com/id/1829241109/photo/enjoying-a-brunch-together.jpg?b=1&s=612x612&w=0&k=20&c=Mn_EPBAGwtzh5K6VyfDmd7Q5eJFXSHhGWVr3T4WDQRo=',
-                      }}
-                      style={{width:65,
-                        height:65,
-                        borderRadius: 15,
-                      }}
-                    />
-                     <Button
+                      <Image
+                        source={{
+                          uri: item.imageUrl,
+                        }}
+                        style={{
+                          width: 65,
+                          height: 65,
+                          borderRadius: 15,
+                        }}
+                      />
+                      <Button
 
-                    icon={<Icon from={IconLibraryName.Ionicons} name="add" size={24} color={Theme.colors.black} />}
-                    style={styles.addButton}
-                    onPress={() => {}}
-                  />
+                        icon={<Icon from={IconLibraryName.Ionicons} name="add" size={24} color={Theme.colors.black} />}
+                        style={styles.addButton}
+                        onPress={() => { dispatch(addFoodToCart({ id: item.id! })) }}
+                      />
                     </View>
-                  </View>
-                  {/* Food Info */}
-
-
-                  {/* Add to Cart Button */}
-
+                  </TouchableOpacity>
                 </View>
               </ImageBackground>
-            </View>
+            </TouchableOpacity>
           )}
         />
       )}
@@ -148,6 +160,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     gap: 30,
+    zIndex:10,
+    // backgroundColor:"red"
   },
   iconButton: {
     backgroundColor: Theme.colors.GrayDark,
@@ -224,14 +238,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'flex-end',
-    position:'absolute',
-    top:'35%',
-    left:'50%',
+    position: 'absolute',
+    top: '35%',
+    left: '50%',
   },
 });
 
-const data = [
-  'https://www.shutterstock.com/image-photo/fried-salmon-steak-cooked-green-600nw-2489026949.jpg',
-  'https://i.pinimg.com/originals/5c/09/c4/5c09c4dc82dc441dfb26975fe8dc1634.jpg',
-  'https://i.pinimg.com/originals/65/95/85/6595856323f822a5e9b6411c5d415b49.jpg',
-];

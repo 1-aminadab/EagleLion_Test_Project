@@ -5,46 +5,56 @@ import { FontSizes, FontWeights } from '../../../domain/enum/theme';
 import { Theme } from '../../theme/theme';
 import Button from '../../component/atom/button/button.component';
 import { Size } from '../../../domain/enum/button';
-import  {NavComponent} from '../../../presentation/component/molecule/card/nav-card.component';
+import { NavComponent } from '../../../presentation/component/molecule/card/nav-card.component';
 import Icon, { IconLibraryName } from '../../component/atom/icon/icon.component';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../../application/stores/store';
+import { ICartItem, IFood } from '../../types';
+import { addFoodToCart, removeFoodFromCart } from '../../../application/stores/slices/food/food.slice';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import HomeScreen from './home.screen';
+import { HomeScreens } from '../../../domain/enum/screen-name';
 
 // Individual Cart Item Component
-const CartItem = ({ item, onQuantityChange }) => {
+const CartItem = ({ item, onQuantityChange, totalItems }: { item: ICartItem }) => {
   const [quantity, setQuantity] = useState(1);
+  const dispatch = useDispatch()
 
-  const handleIncrement = () => {
+  const handleIncrement = (id: string) => {
+    dispatch(addFoodToCart({ id }))
     setQuantity(quantity + 1);
-    onQuantityChange(item.price);
+    // onQuantityChange(item.price);
   };
 
-  const handleDecrement = () => {
+  const handleDecrement = (id: string) => {
+    dispatch(removeFoodFromCart({ id }));
+
     if (quantity > 1) {
       setQuantity(quantity - 1);
-      onQuantityChange(-item.price);
     }
   };
 
   return (
     <View style={styles.cartItem}>
-      <Image source={{ uri: item.image }} style={styles.itemImage} />
+      <Image source={{ uri: item.imageUrl }} style={styles.itemImage} />
       <View style={styles.itemDetails}>
-        <Typography color={Theme.colors.black} weight={FontWeights.Bold} size={FontSizes.Large}>{item.title}</Typography>
-        <Typography weight={FontWeights.Bold}  color={Theme.colors.gray}>{item.description}</Typography>
+        <Typography color={Theme.colors.black} weight={FontWeights.Bold} size={FontSizes.Large}>{item.name}</Typography>
+        <Typography weight={FontWeights.Bold} color={Theme.colors.gray}>{'No description'}</Typography>
         <Typography size={FontSizes.Large} weight={FontWeights.Bold} color={Theme.colors.GrayLight}>
           Edit Special Request
-          </Typography>
- <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>
-      <Typography weight={FontWeights.Bold} size={FontSizes.Medium} >{item.price} QR</Typography>
-         <View style={styles.quantityControls}>
-        <TouchableOpacity onPress={handleDecrement} style={styles.controlButton}>
-          <Text style={styles.controlText}>-</Text>
-        </TouchableOpacity>
-        <Text style={styles.quantity}>{quantity}</Text>
-        <TouchableOpacity onPress={handleIncrement} style={styles.controlButton}>
-          <Text style={styles.controlText}>+</Text>
-        </TouchableOpacity>
-      </View>
-      </View>
+        </Typography>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Typography weight={FontWeights.Bold} size={FontSizes.Medium} >{item.price} QR</Typography>
+          <View style={styles.quantityControls}>
+            <TouchableOpacity onPress={() => handleDecrement(item.id)} style={styles.controlButton}>
+              <Text style={styles.controlText}>-</Text>
+            </TouchableOpacity>
+            <Text style={styles.quantity}>{item.quantity}</Text>
+            <TouchableOpacity onPress={() => handleIncrement(item.id)} style={styles.controlButton}>
+              <Text style={styles.controlText}>+</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
 
 
@@ -54,74 +64,69 @@ const CartItem = ({ item, onQuantityChange }) => {
 
 // Main Cart Screen Component
 const CartScreen = () => {
-  const [total, setTotal] = useState(0);
+  const navigation = useNavigation<NavigationProp<any>>();
 
+  const [total, setTotal] = useState(0);
+  const { cart, totalPrice, totalCartItems } = useSelector((state: RootState) => state.food);
   const handleQuantityChange = (change) => {
     setTotal(total + change);
   };
 
-  const cartItems = [
-    {
-      id: 1,
-      image: 'https://via.placeholder.com/60',
-      title: 'Lentil Soup',
-      description: 'Serve hot',
-      price: 18,
-    },
-    {
-      id: 2,
-      image: 'https://via.placeholder.com/60',
-      title: 'Kachumar Salad',
-      description: 'Add Special Request',
-      price: 12,
-    },
-    {
-      id: 3,
-      image: 'https://via.placeholder.com/60',
-      title: 'Cutlery',
-      description: 'You’ve selected the number of cutlery sets',
-      price: 0,
-    },
-  ];
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
+        <Icon from={IconLibraryName.Ionicons} name="close" size={24} color="black" />
         <Text style={styles.headerTitle}>Cart</Text>
         <TouchableOpacity>
-          <Text style={styles.clearText}>Clear</Text>
+          <Icon from={IconLibraryName.MaterialCommunityIcons} name="delete-outline" size={27} color="black" />
         </TouchableOpacity>
       </View>
 
       <ScrollView style={styles.cartList}>
-        {cartItems.map((item) => (
+        {cart.map((item) => (
           <CartItem key={item.id} item={item} onQuantityChange={handleQuantityChange} />
         ))}
       </ScrollView>
-      <NavComponent
-      title= 'Voture Applied'
-      icon = {        <Icon from={IconLibraryName.MaterialIcons} name="timer" size={20} color={Theme.colors.black} />
-    }
-      description = ''
-      />
-      <NavComponent
-      title= 'Cuttery'
-      icon = {        <Icon from={IconLibraryName.MaterialIcons} name="timer" size={20} color={Theme.colors.black} />
-        
-      }
-      description = 'you have selected the number of cuttery set'
-      />
+      <View style={{ paddingHorizontal: 20, paddingVertical: 5, backgroundColor: "white", marginTop: 2 }}>
 
+
+        <NavComponent
+          title='Voture Applied'
+          icon={<Icon from={IconLibraryName.Ionicons} name="film" size={20} color={Theme.colors.black} />}
+          description=''
+          navItem={<View style={{ backgroundColor: Theme.colors.LightGreen + '66', padding: 7, borderRadius: 20 }}>
+            <Typography weight={FontWeights.Bold}>
+              WellCome
+            </Typography>
+          </View>}
+        />
+
+      </View>
       <View style={styles.footer}>
+        <View style={{ borderBottomWidth: 1, padding: 10 }}>
+          <NavComponent
+            title='Cuttery'
+            icon={<Icon from={IconLibraryName.MaterialCommunityIcons} name="silverware-fork-knife" size={20} color={Theme.colors.black} />}
+            isNav={false}
+            description='you have selected'
+            navItem={<View style={{ backgroundColor: Theme.colors.black, padding: 15, flexDirection: "row", gap: 10, borderRadius: 30 }}>
+              <Typography weight={FontWeights.Bold} color={Theme.colors.white}>
+                2 sets
+              </Typography>
+              <Icon from={IconLibraryName.Feather} name="edit-2" size={24} color={Theme.colors.white} />
+
+            </View>}
+          />
+        </View>
         <View style={styles.footerRow}>
           <Typography color={Theme.colors.LightGreen} >Delivery Fee</Typography>
           <Typography color={Theme.colors.LightGreen} >0 QR</Typography>
         </View>
         <View style={styles.footerRow}>
           <Typography style={styles.footerLabel}>Total</Typography>
-          <Typography style={styles.footerTotal}>{total} QR</Typography>
+          <Typography style={styles.footerTotal}>{totalPrice.toFixed(2)} QR</Typography>
         </View>
-        <Button onPress={() => {}} text="Go to Checkout" size={Size.Large} style={{borderRadius: 50}} icon />
+        <Button onPress={() => navigation.navigate(HomeScreens.ConfirmDelivery)} text="Go to Checkout" size={Size.Large} style={{ borderRadius: 50 }} icon />
       </View>
     </View>
   );
@@ -130,7 +135,7 @@ const CartScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Theme.colors.white,
+    backgroundColor: Theme.colors.GrayLight,
   },
   header: {
     flexDirection: 'row',
@@ -138,7 +143,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 15,
     backgroundColor: '#fff',
-    borderBottomWidth: 1,
+    // borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
   },
   headerTitle: {
@@ -151,6 +156,7 @@ const styles = StyleSheet.create({
   },
   cartList: {
     padding: 10,
+    backgroundColor: Theme.colors.white
   },
   cartItem: {
     flexDirection: 'row',
@@ -189,8 +195,8 @@ const styles = StyleSheet.create({
   },
   quantityControls: {
     flexDirection: 'row',
-    backgroundColor:Theme.colors.GrayLight + '99',
-    borderRadius:20,
+    backgroundColor: Theme.colors.GrayLight + '99',
+    borderRadius: 20,
     alignItems: 'center',
   },
   controlButton: {
@@ -215,6 +221,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#e0e0e0',
     backgroundColor: '#fff',
+    marginTop: 10
   },
   footerRow: {
     flexDirection: 'row',

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, ImageBackground, Text } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, ImageBackground, Text, Linking, Alert } from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 import SwipableModal from '../../component/molecule/modal/swipeable-modal';
 import Typography from '../../component/atom/typography/text.component';
@@ -9,6 +9,7 @@ import { Theme } from '../../theme/theme';
 import { Shape } from '../../../domain/enum/button';
 import { Image } from 'react-native';
 import Icon, { IconLibraryName } from '../../component/atom/icon/icon.component';
+import { Clipboard } from 'react-native';
 
 const DeliveryScreen = () => {
     const [isModalVisible, setModalVisible] = useState(false);
@@ -31,6 +32,21 @@ const DeliveryScreen = () => {
         destination,
     ];
 
+    const [copied, setCopied] = useState(false);
+
+    const handleCopy = () => {
+        Clipboard.setString("+251946450835");
+        setCopied(true);
+
+        // Hide "Copied!" message after 3 seconds
+        setTimeout(() => setCopied(false), 3000);
+    };
+
+    const handleCall = () => {
+        Linking.openURL("tel:+251946450835").catch((err:any) =>
+            Alert.alert("Error", "Unable to make a call. Please try again.")
+        );
+    };
     return (
         <View style={styles.container}>
             {/* Map View */}
@@ -66,7 +82,7 @@ const DeliveryScreen = () => {
             <SwipableModal visible={isModalVisible} onClose={() => setModalVisible(false)}>
                 <View >
                     <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                        <Button shape={Shape.Circle} onPress={() => { }} style={{ backgroundColor: Theme.colors.GrayLight + '77', width: 'auto', gap: 10 }}>
+                        <Button shape={Shape.Circle} onPress={() => handleCopy} style={{ backgroundColor: Theme.colors.GrayLight + '77', width: 'auto', gap: 10 }}>
                             <Text style={{ fontSize: 12, fontWeight: 'bold', marginRight: 5 }}>31625817</Text>
                             <Icon from={IconLibraryName.Ionicons} name="copy" size={15} color={Theme.colors.gray} />
                         </Button>
@@ -141,7 +157,7 @@ const DeliveryScreen = () => {
                             icon={<Icon from={IconLibraryName.Ionicons} name="call-sharp" size={15} color={Theme.colors.black} />
                             }
                             text="call"
-                            onPress={() => console.log('Call Restaurant')}
+                            onPress={() => handleCall}
                             style={styles.callButton}
                             textStyle={{ color: Theme.colors.black }}
                         />

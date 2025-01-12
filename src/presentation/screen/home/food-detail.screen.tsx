@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,17 +6,36 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
-  Dimensions,
-  StyleProp,
+  ImageBackground,
 } from 'react-native';
 import Icon, { IconLibraryName } from '../../component/atom/icon/icon.component';
 import { Theme } from '../../theme/theme';
 import { FontSizes, FontWeights } from '../../../domain/enum/theme';
 import { NavComponent } from '../../component/molecule/card/nav-card.component';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../application/stores/store';
+import IconButton from '../../component/atom/button/icon-button.component';
+import { useNavigation } from '@react-navigation/native';
 
-const { width } = Dimensions.get('screen');
+const dummyFooter: { id: string, name: string, imageUrl: string, }[] = [
+  {
+    id: '1',
+    name: 'Chicken Corn Soup',
+    imageUrl: 'https://cdn.pixabay.com/photo/2016/03/05/19/02/soup-1238248_1280.jpg',
+  },
+  {
+    id: '2',
+    name: 'Hyderabadi Biryani',
+    imageUrl: 'https://cdn.pixabay.com/photo/2019/06/23/10/33/biryani-4298554_1280.jpg',
+  },
+  {
+    id: '3',
+    name: 'Mutton Reshmi Kebab',
+    imageUrl: 'https://cdn.pixabay.com/photo/2016/03/05/20/07/kebab-1238612_1280.jpg',
+  },
+];
 
-const PromoFoodCard = ({ title, image, tag }) => (
+const PromoFoodCard = ({ title, image, tag }: { title: string, image: string, tag: string }) => (
   <View style={styles.promoCard}>
     {tag && (
       <View style={styles.promoTag}>
@@ -29,96 +48,121 @@ const PromoFoodCard = ({ title, image, tag }) => (
 );
 
 const RestaurantScreen = () => {
+  const selectedFood = useSelector((state: RootState) => state.food.selectedFood);
+  const navigation = useNavigation()
+  const [isActiveButton, setIsActiveButton] = useState('Delivery')
+  console.log(selectedFood);
+
+
   return (
     <ScrollView style={styles.container}>
       {/* Highlight Section */}
-      <View>
-        <Image
-          source={{
-            uri: 'https://cdn.pixabay.com/photo/2017/08/08/19/09/kebab-2619309_1280.jpg',
-          }}
-          style={styles.headerImage}
-        />
+      {/* <SwiperPagerButton/> */}
+
+      <ImageBackground
+        source={{
+          uri: selectedFood?.imageUrl,
+        }}
+      // style={styles.headerImage}
+      >
+        <View style={{ flex: 1, height: 200 }}>
+
+          <View style={{ alignItems: 'center', justifyContent: 'space-between', backgroundColor: "red" }}>
+            <IconButton
+              onPress={() => navigation.goBack()}
+              icon={<Icon from={IconLibraryName.MaterialIcons} name="arrow-back-ios" size={20} color={Theme.colors.black} />
+              }
+              style={styles.backButton}
+            />
+
+            <IconButton
+              onPress={() => { }}
+              icon={<Icon from={IconLibraryName.MaterialIcons} name="more-horiz" size={24} color={Theme.colors.black} />}
+              style={styles.menuButton}
+            />
+            <IconButton
+              onPress={() => { }}
+              icon={<Icon from={IconLibraryName.MaterialIcons} name="more-horiz" size={24} color={Theme.colors.black} /> }
+              style={styles.menuButton}
+            />
+            <IconButton
+              onPress={() => { }}
+              icon={<Icon from={IconLibraryName.AntDesign} name="search1" size={24} color={Theme.colors.black} />}
+              style={styles.menuButton}
+            />
+          </View>
+        </View>
         <View style={styles.discountTag}>
           <Text style={styles.discountTagText}>30% Off</Text>
         </View>
-        <TouchableOpacity style={styles.backButton}>
-          <Icon from={IconLibraryName.MaterialIcons} name="arrow-back-ios" size={20} color="#fff" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuButton}>
-          <Icon from={IconLibraryName.MaterialIcons} name="more-horiz" size={24} color="#fff" />
-        </TouchableOpacity>
-      </View>
 
-      {/* Restaurant Details */}
-      <View style={styles.detailsContainer}>
-        <Text style={styles.restaurantName}>Spice and Sizzle</Text>
-        <View style={styles.ratingRow}>
-          <View style={{ backgroundColor: Theme.colors.GrayLight, flexDirection: 'row', padding: 5, alignItems: 'center', borderRadius: 20 }}>
-            <Icon from={IconLibraryName.MaterialIcons} name="star" size={16} color="#FFD700" />
-            <Text style={styles.ratingText}>4.5 (62) ^</Text>
+        {/* Restaurant Details */}
+        <View style={styles.detailsContainer}>
+          <Text style={styles.restaurantName}>Spice and Sizzle</Text>
+          <View style={styles.ratingRow}>
+            <View style={{ backgroundColor: Theme.colors.GrayLight, flexDirection: 'row', padding: 5, alignItems: 'center', borderRadius: 20 }}>
+              <Icon from={IconLibraryName.MaterialIcons} name="star" size={16} color="#FFD700" />
+              <Text style={styles.ratingText}>4.5 (62) </Text>
+              <Icon from={IconLibraryName.Feather} name="chevron-down" size={16} color={Theme.colors.gray} />
+
+            </View>
+
+            <Text style={styles.dot}>•</Text>
+            <Text style={styles.priceLevel}><Text style={{ color: Theme.colors.black }}>$$</Text> $</Text>
+            <Text style={styles.dot}>•</Text>
+            <Text style={styles.cuisine} >Pakistani, Desi, Kebab</Text>
           </View>
 
-          <Text style={styles.dot}>•</Text>
-          <Text style={styles.priceLevel}><Text style={{ color: Theme.colors.black }}>$$</Text> $</Text>
-          <Text style={styles.dot}>•</Text>
-          <Text style={styles.cuisine} >Pakistani, Desi, Kebab</Text>
+          {/* Delivery/Takeaway Toggle */}
+          <View style={styles.deliveryToggle}>
+            <TouchableOpacity style={styles.toggleButtonActive}>
+              <Text style={styles.toggleButtonTextActive}>Delivery</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.toggleButton}>
+              <Text style={styles.toggleButtonText}>Takeaway</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Address */}
+
+          <NavComponent
+            icon={
+              <Icon from={IconLibraryName.MaterialIcons} name="location-pin" size={22} color={Theme.colors.black} />
+            }
+            title="By Snoonu,"
+            description="Al Maamoura, Doha, Al Rayyan Municipality, Qatar"
+          />
+          <NavComponent
+            icon={
+              <Icon from={IconLibraryName.MaterialIcons} name="timer" size={20} color={Theme.colors.black} />
+            }
+            title="In 28 min"
+            description="Tap to schedule order"
+          />
+          <NavComponent
+            icon={
+              <Icon from={IconLibraryName.MaterialIcons} name="group" size={20} color={Theme.colors.black} />
+            }
+            title="Start group order"
+          />
+
         </View>
-
-        {/* Delivery/Takeaway Toggle */}
-        <View style={styles.deliveryToggle}>
-          <TouchableOpacity style={styles.toggleButtonActive}>
-            <Text style={styles.toggleButtonTextActive}>Delivery</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.toggleButton}>
-            <Text style={styles.toggleButtonText}>Takeaway</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Address */}
-
-        <NavComponent
-          icon={
-            <Icon from={IconLibraryName.MaterialIcons} name="location-pin" size={22} color={Theme.colors.black} />
-          }
-          title="By Snoonu,"
-          description="Al Maamoura, Doha, Al Rayyan Municipality, Qatar"
-        />
-        <NavComponent
-          icon={
-            <Icon from={IconLibraryName.MaterialIcons} name="timer" size={20} color={Theme.colors.black} />
-          }
-          title="In 28 min"
-          description="Tap to schedule order"
-        />
-        <NavComponent
-          icon={
-            <Icon from={IconLibraryName.MaterialIcons} name="group" size={20} color={Theme.colors.black} />
-          }
-          title="Start group order"
-        />
-
-      </View>
-
+      </ImageBackground>
       {/* Best Selling Section */}
       <View style={styles.bestSellingContainer}>
         <Text style={styles.bestSellingTitle}>Best Selling</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <PromoFoodCard
-            title="Chicken Corn Soup"
-            image="https://cdn.pixabay.com/photo/2017/01/19/23/51/chicken-soup-1990036_1280.jpg"
-            tag="Promo"
-          />
-          <PromoFoodCard
-            title="Hyderabadi Biryani"
-            image="https://cdn.pixabay.com/photo/2019/06/23/10/33/biryani-4298554_1280.jpg"
-            tag="Promo"
-          />
-          <PromoFoodCard
-            title="Mutton Reshmi Kebab"
-            image="https://cdn.pixabay.com/photo/2016/03/05/20/07/kebab-1238612_1280.jpg"
-            tag="Promo"
-          />
+          {
+            dummyFooter.map((dummy) => {
+              return (
+                <PromoFoodCard
+                  title={dummy.title}
+                  image={selectedFood?.imageUrl!}
+                  tag={dummy.promo}
+                />
+              );
+            })
+          }
         </ScrollView>
       </View>
     </ScrollView>
@@ -138,7 +182,7 @@ const styles = StyleSheet.create({
   },
   discountTag: {
     position: 'absolute',
-    top: 20,
+    top: 150,
     left: 15,
     backgroundColor: '#FF5733',
     paddingHorizontal: 8,
@@ -162,10 +206,9 @@ const styles = StyleSheet.create({
   },
   detailsContainer: {
     padding: 15,
-    // backgroundColor:"red",
+    backgroundColor: Theme.colors.white,
     borderTopEndRadius: 30,
     borderTopStartRadius: 30,
-
   },
   restaurantName: {
     fontSize: 22,
@@ -234,8 +277,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
 
     marginTop: 10,
-    justifyContent: "flex-start",
-    marginRight: 20
+    justifyContent: 'flex-start',
+    marginRight: 20,
   },
   infoText: {
     marginLeft: 10,
@@ -279,7 +322,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
     borderBottomRightRadius: 30,
     borderTopLeftRadius: 20,
-    borderBottomLeftRadius: 20
+    borderBottomLeftRadius: 20,
 
   },
   promoTagText: {

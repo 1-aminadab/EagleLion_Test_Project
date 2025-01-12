@@ -1,105 +1,177 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import Typography from '../../component/atom/typography/text.component';
 import Button from '../../component/atom/button/button.component';
-import { FontSizes, FontWeights } from '../../../domain/enum/theme';
+import { FontWeights } from '../../../domain/enum/theme';
 import Header from '../../component/molecule/card/header.component';
+import { Size } from '../../../domain/enum/button';
+import { useNavigation } from '@react-navigation/native';
+import { OnboardingScreens, RootScreens } from '../../../domain/enum/screen-name';
 
 const RegisterScreen = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [inputFocus, setInputFocus] = useState(false);
+  const [inputFocus, setInputFocus] = useState(true);
+  const [isNameValid, setIsNameValid] = useState(false);
+  const [isEmailValid, setIsEmailValid] = useState(false);
+  const navigation = useNavigation()
+  const validateName = (text: string) => {
+    setName(text);
+    setIsNameValid(text.length >= 3 && text.length <= 50);
+  };
+
+  const validateEmail = (text: string) => {
+    setEmail(text);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    setIsEmailValid(emailRegex.test(text) && text.length <= 100);
+  };
+
   return (
-    <View style={styles.container}>
-     <Header title="Register"/>
-      <View style={{marginTop: 100, flex: 1}}>
-      <TextInput
-      onFocus={() => setInputFocus(true)}
-      onBlur={() => setInputFocus(false)}
-        label="Name"
-        mode="flat"
-        value={name}
-        onChangeText={setName}
-        style={styles.input}
-        placeholder="Enter your name"
-        outlineColor="transparent"
-        activeOutlineColor="transparent"
-        theme={{ colors: {  primary: 'black' } }}
-      />
-  
-      <TextInput
-      onFocus={() => setInputFocus(true)}
-      onBlur={() => setInputFocus(false)}
-        label="E-mail"
-        mode="flat"
-        value={email}
-        onChangeText={setEmail}
-        style={styles.input}
-        keyboardType="email-address"
-        placeholder="Enter your email"
-        theme={{ colors: {  primary: 'black' } }}
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <Header title="Register" />
 
-      />
-
-      <Typography size={12} align="center" style={[styles.infoText, {display: inputFocus ? 'flex' : 'none'}]}>
-        Communications and transaction history from the app will be sent to the verified email address.
-      </Typography>
-
+      <View style={styles.formContainer}>
+        {/* Name Input */}
+        <TextInput
      
-      <View style={styles.promoContainer}>
-        <Typography size={14} align="center" style={styles.promoText}>
-          FREE delivery just for you! 🔥 Use code <Typography weight={FontWeights.Bold}>WELCOME</Typography> and redeem it now!
+          label="Name"
+          mode="flat"
+          value={name}
+          onChangeText={validateName}
+          style={[
+            styles.input,
+            {
+              borderColor: !isNameValid && name ? '#FF0000' : 'transparent',
+            },
+          ]}
+          placeholder="Enter your name"
+          maxLength={50}
+          theme={{
+            
+            colors: {
+              primary: '#000', // Label color
+              text: 'black', // Input text color
+              background: 'transparent', // Remove default input background
+            },
+          }}
+        />
+
+        {/* Email Input */}
+        <TextInput
+          
+          label="E-mail"
+          mode="flat"
+          value={email}
+          onChangeText={validateEmail}
+          style={[
+            styles.input,
+            {
+              borderColor: !isEmailValid && email ? '#FF0000' : 'transparent',
+            },
+          ]}
+          keyboardType="email-address"
+          placeholder="Enter your email"
+          maxLength={100}
+          
+          theme={{
+            colors: {
+              primary: '#000', // Label color
+              text: 'black', // Input text color
+              background: 'transparent', // Remove default input background
+            },
+          }}
+        />
+
+        {/* Validation Info Text */}
+        <Typography
+          size={12}
+          align="center"
+          style={[styles.infoText, { display: inputFocus ? 'flex' : 'none' }]}
+        >
+          Communications and transaction history from the app will be sent to the verified email
+          address.
         </Typography>
+
+        {/* Promo Banner */}
+        {!isNameValid || !isEmailValid ? (
+          <View style={styles.promoContainer}>
+            <Typography size={14} align="center" style={styles.promoText}>
+              FREE delivery just for you! 🔥 Use code{' '}
+              <Typography weight={FontWeights.Bold}>WELCOME</Typography> and redeem it now!
+            </Typography>
+          </View>
+        ) : null}
       </View>
-      </View>
+
+      {/* Register Button */}
       <Button
         text="Register"
         onPress={() => {
-          console.log('Registering:', { name, email });
+          navigation.navigate(RootScreens.Onboarding, {screen: OnboardingScreens.Location})
         }}
         fullWidth
-        disabled ={!name && !email}
-        style={styles.button}
+        size={Size.Large}
+        disabled={!isNameValid || !isEmailValid}
+        style={[
+          styles.button,
+          {
+            backgroundColor: isNameValid && isEmailValid ? '#B00020' : '#E0E0E0',
+          },
+        ]}
+        textStyle={{
+          color: isNameValid && isEmailValid ? '#FFF' : '#A0A0A0',
+        }}
       />
-
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 24,
     backgroundColor: '#fff',
+    paddingHorizontal: 24,
   },
-  title: {
-    marginBottom: 16,
+  formContainer: {
+    marginTop: 100,
+    flex: 1,
   },
   input: {
     marginBottom: 16,
-    backgroundColor: '#fff',
+    backgroundColor: '#F5F5F5', // Light gray background
+    borderWidth: 1,
+    borderColor: 'transparent',
+    borderRadius: 15,
+    borderTopEndRadius:20,
+    borderTopStartRadius:20,
+    paddingHorizontal: 20,
+    elevation: 0, // Removes shadow
   },
   infoText: {
-    marginBottom: 32,
+    marginTop: 8,
+    marginBottom: 16,
     color: '#888',
   },
   button: {
-    marginTop: 16,
     marginBottom: 16,
-    borderRadius: 50
+    paddingVertical: 12,
+    borderRadius: 25,
   },
   promoContainer: {
-    marginTop: 32,
+    marginTop: 24,
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#FFCDD2',
     borderRadius: 8,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#FFEBEE',
   },
   promoText: {
-    color: '#444',
+    color: '#B71C1C',
   },
 });
 

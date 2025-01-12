@@ -1,6 +1,6 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import { View, Text, TextInput, StyleSheet,  ScrollView, TouchableOpacity, Dimensions, Alert } from 'react-native';
-import ContinuousScrollBannerReanimated from '../../component/molecule/card/nav-card.component';// Swiper component
 import FoodCardComponent from '../../component/molecule/card/food-card.component';
 import SearchInput from '../../component/molecule/input/search-input';
 import Button from '../../component/atom/button/button.component';
@@ -9,24 +9,28 @@ import { Theme } from '../../theme/theme';
 import { Intent, Shape } from '../../../domain/enum/button';
 import Typography from '../../component/atom/typography/text.component';
 import { FontSizes, FontWeights } from '../../../domain/enum/theme';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { HomeScreens } from '../../../domain/enum/screen-name';
+import SwiperBanner from '../../component/molecule/card/swiper.component';
 
 const { width } = Dimensions.get('screen');
-
-const HomeScreen = () => {
   const foodData = [
     { image: 'https://media.istockphoto.com/id/1348318884/photo/plate-of-mexican-food-tacos.jpg?s=612x612&w=0&k=20&c=Vt8vi4-sCaum6YrzAiAkH7lUJK5mtp2zYT3uYw1M7iA=', text: 'Restaurant', tag:{title:'New', color:Theme.colors.Primary} },
     { image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRr1s6IHX1AAIzaPSbAqwApeW7Lngn2qD8xg&s', text: 'Snomart' },
     { image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYIcMpcc-GAnYwcxmrPwmoRJNMuDFt6av_Sw&s', text: 'Grocery' },
 
-    { image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxDv5PE7uRMIwGaRNXIJxg7d9MtsyW_8hv0Q&s', text: 'Gifting', tag: {title:'Popular' 
+    { image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxDv5PE7uRMIwGaRNXIJxg7d9MtsyW_8hv0Q&s', text: 'Gifting', tag: {title:'Popular'
 
  , color:'#90EE90'} },
-    { image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxDv5PE7uRMIwGaRNXIJxg7d9MtsyW_8hv0Q&s', text: 'Pharmacy', tag: {title:'Popular' 
+    { image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxDv5PE7uRMIwGaRNXIJxg7d9MtsyW_8hv0Q&s', text: 'Pharmacy', tag: {title:'Popular'
  , color:'#90EE90'}},
     { image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYIcMpcc-GAnYwcxmrPwmoRJNMuDFt6av_Sw&s', text: 'Health & Beauty' },
     { image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxDv5PE7uRMIwGaRNXIJxg7d9MtsyW_8hv0Q&s', text: 'Gifting', tag: {title:'Popular'   , color:'#90EE90'}},
-    
+
   ];
+const HomeScreen = () => {
+  const navigation  = useNavigation<NavigationProp<any>>();
+
   return (
     <ScrollView style={styles.container}>
       {/* Address Section */}
@@ -36,11 +40,12 @@ const HomeScreen = () => {
         <Text style={styles.addressValue}>Doha, Doha, Qatar</Text>
         </View>
        <View>
-        <Button 
+        <Button
+        onPress={() => {}}
         icon={<Icon from={IconLibraryName.MaterialCommunityIcons} name="star-four-points-outline" size={19} color={Theme.colors.white} />}
-        gradient 
-        text='0 QR' 
-        textStyle={{fontSize:12}} 
+        gradient
+        text="0 QR"
+        textStyle={{fontSize:12}}
         style={{borderRadius:20}}
         // gradientStart={{ x: 0.5, y: 0 }} // Gradient starts from the middle top
         gradientEnd={{ x: 0.5, y: 1 }}   // Gradient ends at the middle bottom
@@ -56,7 +61,7 @@ const HomeScreen = () => {
 
       {/* Continuous Swiper */}
       <View style={styles.swiperContainer}>
-        <ContinuousScrollBannerReanimated />
+        <SwiperBanner/>
       </View>
 
       {/* Categories Section */}
@@ -64,25 +69,26 @@ const HomeScreen = () => {
       <View style={styles.cardContainer}>
         {foodData.map((item, index) => (
           <FoodCardComponent
+            onPress={() => navigation.navigate(HomeScreens.FoodSwiper)}
             key={index}
             image={item.image}
             text={item.text}
             tag={item.tag}
           />
         ))}
-        <View style={{alignItems:"center", justifyContent: 'center',}}>
-            <Button 
+        <View style={{alignItems:'center', justifyContent: 'center'}}>
+            <Button
             onPress={() => Alert.alert('more options')}
         shape={Shape.Circle}
         intent={Intent.Secondary}
         icon={<Icon from={IconLibraryName.MaterialCommunityIcons} name="dots-grid" size={44} color="black" />}
-        style={{height:70, width: 70, backgroundColor:Theme.colors.GrayLight+'77'}}
+        style={{height:70, width: 70, backgroundColor:Theme.colors.GrayLight + '77'}}
         />
         <Typography size={FontSizes.Small}weight={FontWeights.Bold}>
           More
         </Typography>
         </View>
-      
+
       </View>
 
 
@@ -96,6 +102,7 @@ const HomeScreen = () => {
       <ScrollView horizontal >
         {foodData.map((item, index) => (
           <FoodCardComponent
+            onPress={() => navigation.navigate(HomeScreens.FoodSwiper)}
             key={index}
             image={item.image}
             // text={item.text}
@@ -113,9 +120,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   addressContainer: {
-    flexDirection:"row",
-    alignItems:"center",
-    justifyContent:"space-between",
+    flexDirection:'row',
+    alignItems:'center',
+    justifyContent:'space-between',
     padding: 15,
     // borderBottomWidth: 1,
     borderBottomColor: '#eee',

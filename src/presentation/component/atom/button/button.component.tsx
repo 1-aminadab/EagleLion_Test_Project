@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     backgroundColor: Theme.colors.Primary,
   },
   secondary: {
-    backgroundColor: '#6B7280',
+    backgroundColor: '#efefef',
   },
   danger: {
     backgroundColor: Theme.colors.Error,
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     marginRight: 0,
   },
   disabledButton: {
-    opacity: 0.6,
+    opacity: 0.4,
   },
   gradientContainer: {
     borderRadius: 8,

@@ -13,8 +13,11 @@ import SwipableModal from '../../component/molecule/modal/swipeable-modal';
 import SearchInput from '../../component/molecule/input/search-input';
 import Button from '../../component/atom/button/button.component';
 import { Size } from '../../../domain/enum/button';
+import { useNavigation } from '@react-navigation/native';
+import { HomeScreens, RootScreens } from '../../../domain/enum/screen-name';
 
 const MapScreen = () => {
+  const navigation  = useNavigation()
   const [searchText, setSearchText] = useState('');
   const [selectedLocation, setSelectedLocation] = useState(countries[0].location);
   const [modalVisible, setModalVisible] = useState(true);
@@ -102,7 +105,7 @@ const MapScreen = () => {
             }}
           />
         </View>
-        <Button size={Size.Large} style={{ borderRadius: 50 }}>
+        <Button onPress={() => navigation.navigate(RootScreens.Home, {screen:HomeScreens.Home})} size={Size.Large} style={{ borderRadius: 50 }}>
           <Text style={styles.openModalText}>Confirm Location</Text>
         </Button>
       </SwipableModal>
