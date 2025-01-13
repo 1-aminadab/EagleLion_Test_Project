@@ -73,9 +73,7 @@ const foodCartSlice = createSlice({
       state.totalCartItems = 0;
       state.totalPrice = 0;
     },
-    selectFood(state, action: PayloadAction<{ id: string }>) {
-      console.log(action.payload.id);
-      
+    selectFood(state, action: PayloadAction<{ id: string }>) {      
         const food = state.foodItems.find((f) => f.id === action.payload.id);
         
         if (food) {

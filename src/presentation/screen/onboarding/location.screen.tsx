@@ -15,6 +15,7 @@ import Button from '../../component/atom/button/button.component';
 import { Size } from '../../../domain/enum/button';
 import { useNavigation } from '@react-navigation/native';
 import { HomeScreens, RootScreens } from '../../../domain/enum/screen-name';
+import { commonStyles } from '../../styles/common-styles';
 
 
 const MapScreen = () => {
@@ -53,13 +54,12 @@ const MapScreen = () => {
           latitudeDelta: 5,
           longitudeDelta: 5,
         }}
-        onPress={() => setModalVisible(true)} // Open modal on map press
+        onPress={() => setModalVisible(true)}
       >
         <Marker
           coordinate={selectedLocation}
           title="Selected Location"
           description="This is the selected country"
-          // image={require('../../assets/images/pointer.png')}
         >
             <View style={styles.customMarker}>
             <Image
@@ -148,8 +148,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   customMarker: {
-    alignItems: 'center',
-    justifyContent: 'center',
+  ...commonStyles.centered,
   },
   markerImage: {
     width: 40,

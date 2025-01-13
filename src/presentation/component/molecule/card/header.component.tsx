@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Button from '../../atom/button/button.component';
 import { Intent } from '../../../../domain/enum/button';
 import { useNavigation } from '@react-navigation/native';
+import { commonStyles } from '../../../styles/common-styles';
 
 interface HeaderProps {
   title?: string;
@@ -34,8 +35,7 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     width: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
+    ...commonStyles.centered,
   },
   title: {
     flex: 1,

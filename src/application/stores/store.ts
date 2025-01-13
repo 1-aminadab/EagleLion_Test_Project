@@ -4,7 +4,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { combineReducers } from 'redux';
 import { persistStore, persistReducer, PersistConfig } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import foodReducer from './slices/food/food.slice'
+import foodReducer from './slices/food/food.slice';
 // Import your slices here
 
 // Define the shape of the root state

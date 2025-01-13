@@ -15,7 +15,7 @@ import { cosmeticsData } from '../../../application/data/dummy-data';
 
 const DeliveryScreen = () => {
     const [isModalVisible, setModalVisible] = useState(true);
-
+    const code = '31625817'
     // Dummy coordinates for the map
     const origin = {
         latitude: 37.7749,
@@ -35,10 +35,8 @@ const DeliveryScreen = () => {
     ];
 
     const [copied, setCopied] = useState(false);
-   console.log(copied);
-   
     const handleCopy = () => {
-        Clipboard.setString("+251946450835");
+        Clipboard.setString(code);
         setCopied(true);
 
         // Hide "Copied!" message after 3 seconds
@@ -46,8 +44,8 @@ const DeliveryScreen = () => {
     };
 
     const handleCall = () => {
-        Linking.openURL("tel:+251946450835").catch((err:any) =>
-            Alert.alert("Error", "Unable to make a call. Please try again.")
+        Linking.openURL('tel:+251946450835').catch((err:any) =>
+            Alert.alert('Error', 'Unable to make a call. Please try again.')
         );
     };
     return (
@@ -66,7 +64,7 @@ const DeliveryScreen = () => {
                 <Marker coordinate={destination} title="Your Location" />
                 <Polyline
                     coordinates={route}
-                    strokeColor={Colors.black} // Customize color
+                    strokeColor={Colors.black}
                     strokeWidth={4}
                 />
             </MapView>
@@ -86,7 +84,7 @@ const DeliveryScreen = () => {
                 <View >
                     <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                         <Button shape={Shape.Circle} onPress={() => handleCopy()} style={{ backgroundColor: Theme.colors.GrayLight + '77', width: 'auto', gap: 10 }}>
-                            <Text style={{ fontSize: 12, fontWeight: 'bold', marginRight: 5 }}>31625817</Text>
+                            <Text style={{ fontSize: 12, fontWeight: 'bold', marginRight: 5 }}>{code}</Text>
                             <Icon from={IconLibraryName.Ionicons} name="copy" size={15} color={Theme.colors.gray} />
                         </Button>
                     </View>
@@ -109,14 +107,12 @@ const DeliveryScreen = () => {
                     >
                         30 - 40 mins
                     </Typography>
-                   
+
 
                     {/* Order Progress */}
                     <View style={styles.progressContainer}>
                         <View style={[styles.progressStep, styles.activeStep]} >
                             <Icon from={IconLibraryName.MaterialIcons} name="done" size={24} color={Theme.colors.white} />
-
-
                         </View>
                         {/* line start */}
                         <View style={[styles.progressLine, styles.activeStep]}/>
@@ -151,7 +147,7 @@ const DeliveryScreen = () => {
                     {/* Restaurant Info */}
                     <View style={styles.restaurantInfo}>
                         <View>
-                            <Image style={{ width: 40, height: 40, borderRadius: 50 }} source={{ uri: 'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTAVYdSTRqpn4q5s9nzlLG-_vp3I5_y5wHLJM12i6Y0iFCV5jYM_pvND6O5B4qHQW46zuw5ThatK9q3EmJA2gQmzwnAmL6jyhPuVBzphg' }} />
+                            <Image style={styles.restaurantInfoImage} source={{ uri: 'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTAVYdSTRqpn4q5s9nzlLG-_vp3I5_y5wHLJM12i6Y0iFCV5jYM_pvND6O5B4qHQW46zuw5ThatK9q3EmJA2gQmzwnAmL6jyhPuVBzphg' }} />
                         </View>
                         <Typography size={FontSizes.Medium} weight={FontWeights.Bold}>
                             Spice and Sizzle
@@ -185,7 +181,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 40,
         alignSelf: 'center',
-        backgroundColor: Colors.GrayLight+'77',
+        backgroundColor: Colors.GrayLight + '77',
         padding: 10,
         borderRadius: 50,
     },
@@ -214,7 +210,7 @@ const styles = StyleSheet.create({
     },
     progressLine : {
         width:30,
-        height:3, 
+        height:3,
         backgroundColor:Theme.colors.GrayLight,
     },
     activeStep: {
@@ -243,6 +239,11 @@ const styles = StyleSheet.create({
         padding: 16,
         alignItems: 'center',
     },
+    restaurantInfoImage: {
+        width: 40,
+        height: 40,
+        borderRadius: 50,
+    }
 });
 
 export default DeliveryScreen;

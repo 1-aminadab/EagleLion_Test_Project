@@ -12,77 +12,78 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../application/stores/store';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { HomeScreens } from '../../../domain/enum/screen-name';
+import { commonStyles } from '../../styles/common-styles';
 const { width } = Dimensions.get('window');
 
 const PaymentSuccessScreen = () => {
   const { cart, totalPrice, totalCartItems } = useSelector((state: RootState) => state.food);
   const navigation = useNavigation<NavigationProp<any>>();
   return (
-    <View style={{padding:10,gap: 15, flex: 1}}>
-        
-        <View >
+    <View style={{ padding: 10, gap: 15, flex: 1 }}>
 
-       
+      <View >
+
+
         <Typography size={FontSizes.Small} weight={FontWeights.Bold} color={Theme.colors.gray}>
-            Home
+          Home
         </Typography>
         <Typography numberOfLines={1} weight={FontWeights.Bold}>
-All Mamora, Doha, Al Mahayn Municpa
+          All Mamora, Doha, Al Mahayn Municpa
         </Typography>
-        </View>
-        <View>
-            <SearchInput/>
-        </View>
-        
-        <SwipableModal visible={true} onClose={() => {}}>
-      <View style={styles.container}>
-        {/* Date and Time */}
-        <Typography
-          size={FontSizes.Small}
-          align="center"
-          weight={FontWeights.Regular}
-          style={styles.dateText}
-        >
-          27 AUG 2024, 5:16 PM
-        </Typography>
-
-        {/* Success Icon */}
-        <View style={styles.successIcon}>
-          <View style={styles.checkmark} />
-        </View>
-
-        {/* Payment Amount */}
-        <Typography
-          size={FontSizes.ExtraLarge}
-          align="center"
-          weight={FontWeights.Bold}
-          style={styles.amountText}
-        >
-          {totalPrice} QR
-        </Typography>
-
-        {/* Success Message */}
-        <Typography
-          size={FontSizes.Regular}
-          align="center"
-          weight={FontWeights.Regular}
-          style={styles.successMessage}
-        >
-          Payment was processed successfully
-        </Typography>
-
-        {/* Button */}
-        <Button
-          intent={Intent.Secondary}
-          text="Go To Order Tracking"
-          onPress={() => navigation.navigate(HomeScreens.Delivery)}
-          style={{backgroundColor:Theme.colors.GrayLight, borderRadius: 50, width:"100%"}}
-          size={Size.Large}
-          textStyle={{color:Theme.colors.black, fontWeight:FontWeights.Bold}}
-          
-        />
       </View>
-    </SwipableModal>
+      <View>
+        <SearchInput />
+      </View>
+
+      <SwipableModal visible={true} onClose={() => { }}>
+        <View style={styles.container}>
+          {/* Date and Time */}
+          <Typography
+            size={FontSizes.Small}
+            align="center"
+            weight={FontWeights.Regular}
+            style={styles.dateText}
+          >
+            27 AUG 2024, 5:16 PM
+          </Typography>
+
+          {/* Success Icon */}
+          <View style={styles.successIcon}>
+            <View style={styles.checkmark} />
+          </View>
+
+          {/* Payment Amount */}
+          <Typography
+            size={FontSizes.ExtraLarge}
+            align="center"
+            weight={FontWeights.Bold}
+            style={styles.amountText}
+          >
+            {totalPrice} QR
+          </Typography>
+
+          {/* Success Message */}
+          <Typography
+            size={FontSizes.Regular}
+            align="center"
+            weight={FontWeights.Regular}
+            style={styles.successMessage}
+          >
+            Payment was processed successfully
+          </Typography>
+
+          {/* Button */}
+          <Button
+            intent={Intent.Secondary}
+            text="Go To Order Tracking"
+            onPress={() => navigation.navigate(HomeScreens.Delivery)}
+            style={{ backgroundColor: Theme.colors.GrayLight, borderRadius: 50, width: '100%' }}
+            size={Size.Large}
+            textStyle={{ color: Theme.colors.black, fontWeight: FontWeights.Bold }}
+
+          />
+        </View>
+      </SwipableModal>
     </View>
   );
 };
@@ -104,8 +105,7 @@ const styles = StyleSheet.create({
     height: 64,
     borderRadius: 32,
     backgroundColor: Colors.LightGreen,
-    justifyContent: 'center',
-    alignItems: 'center',
+    ...commonStyles.centered,
     marginBottom: 16,
   },
   checkmark: {

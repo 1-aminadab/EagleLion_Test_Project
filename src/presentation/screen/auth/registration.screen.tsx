@@ -53,9 +53,9 @@ const RegisterScreen = () => {
           theme={{
             
             colors: {
-              primary: '#000', // Label color
-              text: 'black', // Input text color
-              background: 'transparent', // Remove default input background
+              primary: '#000',
+              text: 'black',
+              background: 'transparent',
             },
           }}
         />
@@ -79,9 +79,9 @@ const RegisterScreen = () => {
           
           theme={{
             colors: {
-              primary: '#000', // Label color
-              text: 'black', // Input text color
-              background: 'transparent', // Remove default input background
+              primary: '#000',
+              text: 'black',
+              background: 'transparent',
             },
           }}
         />
@@ -142,14 +142,14 @@ const styles = StyleSheet.create({
   },
   input: {
     marginBottom: 16,
-    backgroundColor: '#F5F5F5', // Light gray background
+    backgroundColor: '#F5F5F5',
     borderWidth: 1,
     borderColor: 'transparent',
     borderRadius: 15,
     borderTopEndRadius:20,
     borderTopStartRadius:20,
     paddingHorizontal: 20,
-    elevation: 0, // Removes shadow
+    elevation: 0,
   },
   infoText: {
     marginTop: 8,

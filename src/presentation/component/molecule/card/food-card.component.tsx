@@ -1,6 +1,7 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import { Theme } from '../../../theme/theme';
+import { commonStyles } from '../../../styles/common-styles';
 
 interface IProp {
   image: string;
@@ -41,8 +42,8 @@ const styles = StyleSheet.create({
     left: 48,
     zIndex: 1,
     width: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
+    ...commonStyles.centered,
+
   },
   tagText: {
     fontSize: 9,

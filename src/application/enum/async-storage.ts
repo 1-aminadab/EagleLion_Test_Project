@@ -5,11 +5,8 @@ export enum StorageKeys {
     CURRENT_SCREEN = 'currentScreen'
 }
 export const setItem = async(key:StorageKeys, value:any): Promise<void> => {
-    console.log(key, value);
     try {
         const jsonValue = typeof value === "string" ? value : JSON.stringify(value);  
-        console.log(jsonValue);
-
         await AsyncStorage.setItem(key, jsonValue);
     } catch (error) {
         console.error(`Error setting item with key ${key}:`, error)
@@ -37,7 +34,6 @@ export const getItem = async (key: StorageKeys): Promise<any> => {
 export const removeItem = async (key: StorageKeys): Promise<void> => {
     try {
       await AsyncStorage.removeItem(key);
-      console.log(`Item successfully removed with key: ${key}`);
     } catch (error) {
       console.error(`Error removing item with key ${key}:`, error);
     }

@@ -13,6 +13,7 @@ import {
 import { Theme } from '../../theme/theme';
 import Typography from '../atom/typography/text.component';
 import { FontWeights } from '../../../domain/enum/theme';
+import { commonStyles } from '../../styles/common-styles';
 
 const { width } = Dimensions.get('window');
 
@@ -117,8 +118,7 @@ const styles = StyleSheet.create({
     },
     btn: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        ...commonStyles.centered,
     },
     animatedBtnContainer: {
         height: 45,
@@ -130,8 +130,7 @@ const styles = StyleSheet.create({
     },
     animatedBtn: {
         height: 40,
-        justifyContent: 'center',
-        alignItems: 'center',
+        ...commonStyles.centered,
     },
     btnTextActive: {
         color: '#fff',

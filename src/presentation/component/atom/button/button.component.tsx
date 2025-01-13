@@ -11,6 +11,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import { Theme } from '../../../theme/theme';
 import { IconPosition, Intent, Shape, Size } from '../../../../domain/enum/button';
+import { commonStyles } from '../../../styles/common-styles';
 
 interface ButtonProps {
   text?: string;
@@ -113,8 +114,7 @@ const Button: React.FC<ButtonProps> = ({
 
 const styles = StyleSheet.create({
   base: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    ...commonStyles.centered,
     paddingHorizontal: 8,
   },
   fullWidth: {
@@ -125,8 +125,7 @@ const styles = StyleSheet.create({
   },
   circle: {
     borderRadius: 500,
-    justifyContent: 'center',
-    alignItems: 'center',
+    ...commonStyles.centered,
   },
   primary: {
     backgroundColor: Theme.colors.Primary,
@@ -183,8 +182,8 @@ const styles = StyleSheet.create({
   },
   gradientTouchable: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    ...commonStyles.centered,
+
   },
 });
 

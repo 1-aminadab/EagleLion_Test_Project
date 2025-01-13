@@ -34,18 +34,16 @@ const PhoneNumberInput = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const navigation = useNavigation();
 
-  // Validate phone number
   const validatePhoneNumber = (number: string): boolean => {
-    const minLength = 8; // Example: Minimum 8 digits
-    const maxLength = 15; // Example: Maximum 15 digits
-    const regex = /^[0-9]+$/; // Only numbers
+    const minLength = 8;
+    const maxLength = 15;
+    const regex = /^[0-9]+$/;
     return regex.test(number) && number.length >= minLength && number.length <= maxLength;
   };
 
   const handlePhoneNumberChange = (text: string) => {
     setPhoneNumber(text);
 
-    // Clear error when user starts typing
     if (errorMessage) setErrorMessage('');
   };
 

@@ -15,21 +15,23 @@ import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { HomeScreens } from '../../../domain/enum/screen-name';
 import IconButton from '../../component/atom/button/icon-button.component';
 import { RootState } from '../../../application/stores/store';
+import { commonStyles } from '../../styles/common-styles';
 
 export default function FoodSwiperScreen() {
   const { cart, totalCartItems } = useSelector((state: RootState) => state.food);
-  console.log(totalCartItems);
 
   const [viewHeight, setHeight] = useState<number | null>(null);
   const dispatch = useDispatch();
   const navigation = useNavigation<NavigationProp<any>>();
+
   const handleSelectFood = (id: string) => {
     dispatch(selectFood({ id }));
     navigation.navigate(HomeScreens.FoodDetail);
   };
   useEffect(() => {
     dispatch(setFoodItems(dummyFoods));
-  }, [])
+  }, []);
+
   return (
     <View style={styles.container} onLayout={(e) => setHeight(e.nativeEvent.layout.height)}>
       {/* Header */}
@@ -37,7 +39,7 @@ export default function FoodSwiperScreen() {
         <Button
           icon={<Icon from={IconLibraryName.Ionicons} name="arrow-back" size={20} color="white" />}
           style={styles.iconButton}
-          onPress={() => { }}
+          onPress={() => navigation.goBack()}
           shape={Shape.Circle}
         />
         <Typography size={FontSizes.Medium} weight={FontWeights.Bold} color={Theme.colors.white} style={styles.headerText}>
@@ -112,7 +114,7 @@ export default function FoodSwiperScreen() {
                       </Typography>
                     </View>
                   </View>
-                  <TouchableOpacity onPress={() => navigation.navigate(HomeScreens.FoodDetail)} style={{ backgroundColor: Theme.colors.GrayDark + 'ee', flexDirection: 'row', alignItems: 'center', padding: 10, borderRadius: 15 }}>
+                  <TouchableOpacity onPress={() => handleSelectFood(item.id)} style={{ backgroundColor: Theme.colors.GrayDark + 'ee', flexDirection: 'row', alignItems: 'center', padding: 10, borderRadius: 15 }}>
                     <View style={{ flex: 1 }}>
                       <Typography numberOfLines={1} size={FontSizes.Medium} weight={FontWeights.Bold} color={Theme.colors.white} >
                         {item.name}
@@ -251,8 +253,7 @@ const styles = StyleSheet.create({
     width: 35,
     height: 35,
     borderRadius: 25,
-    alignItems: 'center',
-    justifyContent: 'center',
+    ...commonStyles.centered,
     alignSelf: 'flex-end',
     position: 'absolute',
     top: '35%',

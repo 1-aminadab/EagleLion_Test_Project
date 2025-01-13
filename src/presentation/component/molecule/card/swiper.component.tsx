@@ -12,6 +12,7 @@ import { Theme } from '../../../theme/theme';
 import Typography from '../../atom/typography/text.component';
 import { FontSizes, FontWeights } from '../../../../domain/enum/theme';
 import { ActivityIndicator } from 'react-native';
+import { commonStyles } from '../../../styles/common-styles';
 
 const { width } = Dimensions.get('screen');
 
@@ -170,13 +171,11 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    ...commonStyles.centered,
   },
   dotsContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    ...commonStyles.centered,
     marginVertical: 10,
   },
   dot: {

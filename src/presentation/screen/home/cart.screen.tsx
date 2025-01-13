@@ -14,6 +14,7 @@ import { addFoodToCart, clearCart, removeFoodFromCart } from '../../../applicati
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import HomeScreen from './home.screen';
 import { HomeScreens } from '../../../domain/enum/screen-name';
+import { commonStyles } from '../../styles/common-styles';
 
 // Individual Cart Item Component
 const CartItem = ({ item, onQuantityChange, totalItems }: { item: ICartItem }) => {
@@ -212,8 +213,8 @@ const styles = StyleSheet.create({
     height: 30,
     borderRadius: 15,
     // backgroundColor: '#f0f0f0',
-    justifyContent: 'center',
-    alignItems: 'center',
+    ...commonStyles.centered,
+    
   },
   controlText: {
     fontSize: 18,

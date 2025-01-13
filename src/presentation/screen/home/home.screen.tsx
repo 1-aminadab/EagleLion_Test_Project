@@ -35,8 +35,8 @@ const HomeScreen = () => {
         text="0 QR"
         textStyle={{fontSize:12}}
         style={{borderRadius:20}}
-        // gradientStart={{ x: 0.5, y: 0 }} // Gradient starts from the middle top
-        gradientEnd={{ x: 0.5, y: 1 }}   // Gradient ends at the middle bottom
+        // gradientStart={{ x: 0.5, y: 0 }}
+        gradientEnd={{ x: 0.5, y: 1 }}
         />
        </View>
       </View>

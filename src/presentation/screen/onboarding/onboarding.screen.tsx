@@ -8,6 +8,7 @@ import { Intent } from '../../../domain/enum/button';
 import { FontSizes, FontWeights } from '../../../domain/enum/theme';
 import { useNavigation } from '@react-navigation/native';
 import { AuthScreens, RootScreens } from '../../../domain/enum/screen-name';
+import { commonStyles } from '../../styles/common-styles';
 
 const { width, height } = Dimensions.get('window');
 
@@ -28,10 +29,6 @@ const OnboardingScreen = () => {
     return () => clearTimeout(timer);
   }, []);
   const navigation  = useNavigation();
-  const handleLanguageSelection = (language) => {
-    console.log(`Selected Language: ${language}`);
-    setLangModalVisible(false);
-  };
 
   if (showInitialScreen) {
     return (
@@ -122,8 +119,7 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    ...commonStyles.centered,
   },
   initialLogo: {
     width: 90,
